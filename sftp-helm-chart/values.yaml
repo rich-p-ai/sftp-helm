@@ -1,0 +1,40 @@
+# Default values for the SFTP chart
+image:
+  repository: atmoz/sftp
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 22
+  nodePort: 30022
+
+# Define SFTP users
+# Format: username:password[:e][:uid[:gid[:dir1[,dir2]...]]]
+users:
+  - "sftp-user::1001:100:upload"
+
+# Security settings for OpenShift
+security:
+  serviceAccount:
+    create: true
+    name: sftp-sa
+  securityContext:
+    privileged: true
+
+# SSH Host Keys
+sshHostKeys:
+  # You should generate your own keys and provide them here
+  ed25519:
+    private: "" # Paste the content of ssh_host_ed25519_key here
+    public: ""  # Paste the content of ssh_host_ed25519_key.pub here
+  rsa:
+    private: "" # Paste the content of ssh_host_rsa_key here
+    public: ""  # Paste the content of ssh_host_rsa_key.pub here
+
+# Storage configuration
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi

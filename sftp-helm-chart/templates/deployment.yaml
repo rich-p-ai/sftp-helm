@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sftp.fullname" . }}
+  labels:
+    app: {{ include "sftp.name" . }}
+    chart: {{ include "sftp.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "sftp.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "sftp.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Values.security.serviceAccount.name }}
+      volumes:
+        - name: ssh-host-keys
+          secret:
+            secretName: {{ include "sftp.fullname" . }}-host-keys
+            defaultMode: 0600
+        {{- if .Values.persistence.enabled }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "sftp.fullname" . }}-data
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            {{- range .Values.users }}
+            - {{ . | quote }}
+            {{- end }}
+          ports:
+            - name: ssh
+              containerPort: 22
+              protocol: TCP
+          securityContext:
+            privileged: {{ .Values.security.securityContext.privileged }}
+          volumeMounts:
+            - mountPath: /etc/ssh/ssh_host_ed25519_key
+              name: ssh-host-keys
+              subPath: ssh_host_ed25519_key
+              readOnly: true
+            - mountPath: /etc/ssh/ssh_host_ed25519_key.pub
+              name: ssh-host-keys
+              subPath: ssh_host_ed25519_key.pub
+              readOnly: true
+            - mountPath: /etc/ssh/ssh_host_rsa_key
+              name: ssh-host-keys
+              subPath: ssh_host_rsa_key
+              readOnly: true
+            - mountPath: /etc/ssh/ssh_host_rsa_key.pub
+              name: ssh-host-keys
+              subPath: ssh_host_rsa_key.pub
+              readOnly: true
+            {{- if .Values.persistence.enabled }}
+            - name: data
+              mountPath: /home
+            {{- end }}

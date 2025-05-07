@@ -1,0 +1,10 @@
+apiVersion: v2
+name: sftp
+namespace: sftp-ns
+description: Helm Chart for atmoz/sftp server on OpenShift
+type: application
+version: 0.1.0
+appVersion: "latest"
+maintainers:
+  - name: Richard Sawyers
+    email: richard.sawyers@kohler.com
