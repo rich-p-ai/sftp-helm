@@ -1,5 +1,3 @@
-Here's a comprehensive README.md for deploying the SFTP Helm chart on OpenShift:
-
 ```markdown
 # SFTP Server Helm Chart for OpenShift
 
@@ -205,24 +203,3 @@ prometheus:
   port: 9115
   path: /metrics
 ```
-
-## License
-Apache 2.0 - See [LICENSE](https://github.com/your-org/sftp-helm-chart/LICENSE)
-```
-
-This README provides:
-1. Complete deployment instructions
-2. OpenShift-specific security configuration
-3. Production-grade security practices
-4. Comprehensive troubleshooting guide
-5. Scalability considerations
-6. Integration with OpenShift ecosystem components
-
-To use this README:
-1. Save as `README.md` in your chart directory
-2. Commit to your Git repository
-3. Update placeholder values (URLs, credentials, etc.)
-4. Include in your Helm chart package
-
----
-Answer from Perplexity: pplx.ai/share
